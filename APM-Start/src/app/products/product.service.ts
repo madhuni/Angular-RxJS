@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 
 import { Product } from './product';
 import { Supplier } from '../suppliers/supplier';
@@ -18,7 +18,15 @@ export class ProductService {
   /** Creating a property using the declarative pattern */
   products$: Observable<Product[]> = this.http.get<Product[]>(this.productsUrl)
     .pipe(
-      tap(data => console.log('Products: ', JSON.stringify(data))),
+      /** Using the `map` operator to modify the data */
+      map((res: Product[]) => {
+        return res.map(product => ({
+          ...product,
+          price: product.price * 1.5,
+          searchKey: [product.productName]
+        }) as Product);
+      }),
+      tap(data => console.log('Products: ', data)),
       catchError(this.handleError)
     );
 
