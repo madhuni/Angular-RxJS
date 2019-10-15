@@ -16,7 +16,7 @@ export class ProductListComponent {
   errorMessage = '';
   categories;
 
-  products$: Observable<Product[]> = this.productService.products$;
+  products$: Observable<Product[]> = this.productService.productsWithCategory$;
 
   constructor(private productService: ProductService) { }
 
